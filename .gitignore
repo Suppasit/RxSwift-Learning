@@ -1,0 +1,55 @@
+# =========================================================================
+# Xcode & SwiftUI Core
+# =========================================================================
+
+# Build artifacts and intermediate files
+build/
+DerivedData/
+
+# User-specific Xcode settings (window positions, open files, etc.)
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+
+# Local Xcode Server / Xcode Cloud text logs
+*.xccheckout
+*.xcscmblueprint
+
+# =========================================================================
+# Package Managers & Dependencies
+# =========================================================================
+
+# Swift Package Manager (SPM)
+# Un-comment the next line if you do NOT want to cache dependency source code
+# .build/
+
+# CocoaPods (If used instead of SPM)
+Pods/
+Makefile.pods
+
+# Carthage (If used instead of SPM)
+Carthage/Build/
+Carthage/Checkouts/
+
+# =========================================================================
+# Security & Environments
+# =========================================================================
+
+# Never commit local secrets, API keys, or private environment files
+.env
+.env.*
+*.plist.local
+
+# =========================================================================
+# macOS System Files
+# =========================================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+$_*
+.Spotlight-V100
+.Trashes
