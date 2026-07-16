@@ -32,7 +32,8 @@ package.dependencies = [
 package.targets = [
     .target(name: "PlaygroundDependencies",
         dependencies: [
-            .product(name: "RxSwift", package: "RxSwift")
+            .product(name: "RxSwift", package: "RxSwift"),
+            .product(name: "RxRelay", package: "RxSwift")
         ]
     )
 ]
