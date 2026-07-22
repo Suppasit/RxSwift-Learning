@@ -1,0 +1,191 @@
+import Foundation
+import RxSwift
+import RxRelay
+
+example(of: "ignoreElements") {
+    let strike = PublishSubject<String>()
+    
+    let disposeBag = DisposeBag()
+    
+    strike
+        .ignoreElements()
+        .subscribe { _ in
+            print("You're out!")
+        }
+        .disposed(by: disposeBag)
+    
+    strike.onNext("X")
+    strike.onNext("X")
+    strike.onNext("X")
+    strike.onCompleted()
+}
+
+example(of: "elementAt") {
+    let strike = PublishSubject<String>()
+    
+    let disposeBag = DisposeBag()
+    
+    strike
+        .element(at: 2)
+        .subscribe { _ in
+            print("You're out!")
+        }
+        .disposed(by: disposeBag)
+    
+    strike.onNext("X")
+    strike.onNext("X")
+    strike.onNext("X")
+}
+
+example(of: "filtre") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of(1, 2, 3 ,4, 5, 6)
+        .filter { $0.isMultiple(of: 2) }
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "skip") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of("A", "B", "C", "D", "E", "F")
+        .skip(3)
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "skipWhile") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of(2, 2, 3, 4, 4)
+        .skip { $0.isMultiple(of: 2) }
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "skipUntil") {
+    let disposeBag = DisposeBag()
+    
+    let subject = PublishSubject<String>()
+    let trigger = PublishSubject<String>()
+    
+    subject
+        .skip(until: trigger)
+        .subscribe {
+            print($0)
+        }
+        .disposed(by: disposeBag)
+    
+    subject.onNext("A")
+    subject.onNext("B")
+    
+    trigger.onNext("X")
+    
+    subject.onNext("C")
+}
+
+example(of: "take") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of(1, 2, 3, 4, 5, 6)
+        .take(3)
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "takeWhile") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of(2, 2, 4, 4, 6, 6)
+        .enumerated()
+        .take(while: { index, integer in
+            integer.isMultiple(of: 2) && index < 3
+        })
+        .map(\.element)
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "takeUntil") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of(1, 2, 3, 4, 5)
+        .take(until: {
+            $0.isMultiple(of: 4)
+        }, behavior: .exclusive)
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "takeUntil trigger") {
+    let disposeBag = DisposeBag()
+    
+    let subject = PublishSubject<String>()
+    let trigger = PublishSubject<String>()
+
+    subject
+        .take(until: trigger)
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+    
+    subject.onNext("1")
+    subject.onNext("2")
+    
+    trigger.onNext("X")
+    
+    trigger.onNext("3")
+}
+
+example(of: "distincUntilChanged") {
+    let disposeBag = DisposeBag()
+    
+    Observable.of("A", "A", "B", "B", "A")
+        .distinctUntilChanged()
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
+
+example(of: "distincUntileChanged(_:)") {
+    let disposeBag = DisposeBag()
+    
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .spellOut
+    
+    Observable<NSNumber>.of(10, 110, 20, 200, 210, 310)
+        .distinctUntilChanged { a, b in
+            guard let aWords = formatter.string(from: a)?.components(separatedBy: " "),
+                  let bWords = formatter.string(from: b)?.components(separatedBy: " ")
+            else {
+                return false
+            }
+            
+            var containsMatch = false
+            
+            for aWord in aWords where bWords.contains(aWord) {
+                containsMatch = true
+                break
+            }
+            return containsMatch
+        }
+        .subscribe {
+            print($0.element ?? $0)
+        }
+        .disposed(by: disposeBag)
+}
